@@ -1,0 +1,21 @@
+# Configuration Apache du site UDDH (hébergement PHP)
+Options -Indexes
+DirectoryIndex index.html
+RewriteEngine On
+
+# Fichiers sensibles inaccessibles depuis le web
+RewriteRule ^(data|\.venv)(/|$) - [F,L]
+RewriteRule (^|/)(server\.py|.*\.bak|\.DS_Store)$ - [F,L]
+RewriteRule ^api/lib\.php$ - [F,L]
+
+# Tableau de bord admin protégé par connexion
+RewriteRule ^admin/?$ api/admin.php [L]
+RewriteRule ^admin/index\.html$ api/admin.php [L]
+
+# API JSON
+RewriteRule ^api/(page|admin)\.php$ - [L]
+RewriteRule ^api(/.*)?$ api/index.php [L,QSA]
+
+# Pages publiques : comptage des visites
+RewriteRule ^$ api/page.php?file=index.html [L]
+RewriteRule ^([A-Za-z0-9_-]+\.html)$ api/page.php?file=$1 [L,QSA]
